@@ -1,59 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- ====================================================================== 
-     2 окт. 2019 г. 16:34:30                                                        
 
-     project    
-     description
-                   
-     alexe                                                                
-     ====================================================================== -->
-<project name="usermanagement" default="test" basedir=".">
-    <description>
-            description
-    </description>
+<project name="usermanagment" basedir="." default="test">
+  <description>
+    Mechanism that helps us manage users into information system
+  </description>
 
-	<property name="build-dir" value="${basedir}/bin"/>
-	<property name="test-java-dir" value="${basedir}/src/test/java"/>
-	<property name="main-java-dir" value="${basedir}/src/main/java"/>
+  <property name="test-java-dir" value="${basedir}/src/test/java" />
+  <property name="main-java-dir" value="${basedir}/src/main/java" />
+  <property name="build-dir" value="${basedir}/bin" />
+  <property name="lib-dir" value="${basedir}/lib" />
 
-    <!-- ================================= 
-          target: default              
-         ================================= -->
-    <target name="test" depends="test-compile" description="description">
-        <junit>
-        	<classpath>
-        		<pathelement location="${build-dir}"/>
-        	</classpath>
-        	<formatter type="plain"/>
-        	<batchtest>
-        	    <fileset dir="${test-java-dir}">
-        	      <include name="**/*.class"/>
-        	    </fileset>
-        	</batchtest>
-        </junit>
-    </target>
+  <!--======================================
+      target: Test
+      ====================================== -->
 
-    <!-- - - - - - - - - - - - - - - - - - 
-          target: depends                      
-         - - - - - - - - - - - - - - - - - -->
-	<target name="compile" depends="init">
-		<javac srcdir="${main-java-dir}" destdir="${build-dir}"/>
-	</target>
-	
-    <target name="test-compile" depends="compile">
-    	<javac srcdir="${test-java-dir}" destdir="${build-dir}" includeantruntime="flase">
-			<classpath>
-				<path id="org.junit" location="C:\Users\alexe\.p2\pool\plugins\org.junit_4.12.0.v201504281640\junit.jar"/>
-			</classpath>
-    	</javac>
-    </target>
-	
-	<target name="init" depends="clean">
-		<mkdir dir="${build-dir}"/>
-	</target>
-	
-	<target name="clean">
-		<delete dir="${build-dir}" failonerror="no"/>
-	</target>
+  <target name="test" depends="test-compile, compile" description="description">
+    <junit>
+      <classpath>
+        <pathelement location="${build-dir}" />
+        <fileset dir="${lib-dir}">
+          <include name="**/junit3.8.1.jar" />
+        </fileset>
+      </classpath>
+      <test name="ua.nure.kn.kutovoy.usermanagment.domain.UserTest" />
+      <formatter type="plain" />
+    </junit>
+  </target>
 
+  <!--======================================
+      target: test-compile
+      ====================================== -->
+
+  <target name="test-compile" depends="compile">
+    <javac srcdir="${test-java-dir}" destdir="${build-dir}">
+      <classpath>
+        <path id="org.junit" location="${lib-dir}/junit3.8.1.jar" />
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac srcdir="${main-java-dir}" destdir="${build-dir}"/>
+  </target>
+
+  <target name="init" depends="clean">
+    <mkdir dir="${build-dir}" />
+  </target>
+
+  <target name="clean">
+    <delete dir="${build-dir}" />
+  </target>
 </project>
