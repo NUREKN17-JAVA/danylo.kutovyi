@@ -1,29 +1,41 @@
-package ua.nure.kn.kutovoy;
-
-import java.util.Calendar;
+package ua.nure.kn.kutovoy.usermanagment.domain;
 
 import junit.framework.TestCase;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class UserTest extends TestCase {
 
-    // first person
-    private static final int DAY_OF_BIRTH = 22;
-    private static final int MONTH_OF_BIRTH = 01;
+    private static final int DAY_OF_BIRTH = 13;
+    private static final int DAY_OF_BIRTH_1 = 15;
+    private static final int DAY_OF_BIRTH_2 = 14;
+    private static final int DAY_OF_BIRTH_3 = 16;
+
+    private static final int MONTH_OF_BIRTH = Calendar.MAY;
     private static final int YEAR_OF_BIRTH = 2000;
     private static final int ETHALON_AGE = 19;
 
-    // second person
-    private static final int MONTH_OF_BIRTH_1 = 4;
-    private static final int ETALON_AGE_1 = 21;
+    private static final int MONTH_OF_BIRTH_1 = Calendar.SEPTEMBER;
+    private static final int YEAR_OF_BIRTH_1 = 1999;
+    private static final int ETHALON_AGE_1 = 20;
+
+
+    private static final int MONTH_OF_BIRTH_2 = Calendar.OCTOBER;
+    private static final int ETHALON_AGE_3 = 18;
+
+    // Works on 03 October 2019
 
     private User user;
 
+    // Test to get user full name
     public void testGetFullName() {
-        user.setFirstName("Stepan");
-        user.setLastName("Angelov");
-        assertEquals("Angelov Stepan", user.getFullName());
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        assertEquals("Doe, John", user.getFullName());
     }
 
+    // Test to get age
     public void testGetAge() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(YEAR_OF_BIRTH, MONTH_OF_BIRTH, DAY_OF_BIRTH);
@@ -31,40 +43,39 @@ public class UserTest extends TestCase {
         assertEquals(ETHALON_AGE, user.getAge());
     }
 
+    // Test to get age, if birthday is later than now
     public void testGetAge1() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(YEAR_OF_BIRTH, MONTH_OF_BIRTH_1, DAY_OF_BIRTH);
+        calendar.set(YEAR_OF_BIRTH_1, MONTH_OF_BIRTH_1, DAY_OF_BIRTH);
         user.setDateOfBirth(calendar.getTime());
-        assertEquals(ETALON_AGE_1, user.getAge());
+        assertEquals(ETHALON_AGE_1, user.getAge());
     }
 
-    public void testAgeHappyBirthdayTomorrow() {
+    //Test to get age, if birthday is today
+    public void testGetAgeT() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(YEAR_OF_BIRTH, calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        calendar.add(Calendar.DAY_OF_MONTH, 9);
+        calendar.set(YEAR_OF_BIRTH, MONTH_OF_BIRTH_2, DAY_OF_BIRTH_1);
         user.setDateOfBirth(calendar.getTime());
-        int realAge = user.getAge();
-        assertEquals(ETHALON_AGE, realAge);
+        assertEquals(ETHALON_AGE, user.getAge());
     }
 
-    public void testArrivalAge() {
-        int supposedAge = 0;
+    //Test to get age, if birthday in this month but earlier then now
+    public void testGetAgeDayBefore() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        calendar.set(YEAR_OF_BIRTH, MONTH_OF_BIRTH_2, DAY_OF_BIRTH_2);
         user.setDateOfBirth(calendar.getTime());
-        int realAge = user.getAge();
-        assertEquals(supposedAge, realAge);
+        assertEquals(ETHALON_AGE_3, user.getAge());
     }
 
-    public void testAgeHappyBirthdayToday() {
+    // Test to get age, if birthday in this month and later
+    public void testGetAgeDayAfter() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(YEAR_OF_BIRTH, calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        calendar.set(YEAR_OF_BIRTH, MONTH_OF_BIRTH_2, DAY_OF_BIRTH_3);
         user.setDateOfBirth(calendar.getTime());
-        int realAge = user.getAge();
-        assertEquals(ETHALON_AGE, realAge);
+        assertEquals(ETHALON_AGE, user.getAge());
     }
 
-    protected void setUp() throws Exception {
+    protected void setUp() throws Exception{
         super.setUp();
         user = new User();
     }
@@ -73,4 +84,3 @@ public class UserTest extends TestCase {
         super.tearDown();
     }
 }
-
